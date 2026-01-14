@@ -206,32 +206,19 @@ To convert forecasting into supervised learning, I created lag/rolling features 
 
 ### Aggregated series (Prophet / SARIMAX / LightGBM / XGBoost)
 
-Below is the final holdout performance (90-day holdout) from the notebook:
-
-
+Below is the final holdout performance (90-day horizon):
 
 | Model | RMSE | MAE | sMAPE | Notes |
-
-|---|---:|---:|---:|---|
-
-| Prophet (baseline) | 9141.43 | 8047.37 | 26.74 | Not suited here; large errors |
-
+|------|------|-----|-------|-------|
+| Prophet (baseline) | 9141.43 | 8047.37 | 26.74 | Not suited here, large errors |
 | SARIMAX (baseline) | 4465.52 | 3515.09 | 14.06 | Better than Prophet but still weak |
-
 | LightGBM (baseline, FE v1) | 991.28 | 689.76 | 2.68 | Strong jump vs classical models |
-
 | LightGBM (Optuna tuned, FE v1) | **748.37** | **538.31** | **2.08** | Best among tabular models |
-
 | LightGBM (FE v2 baseline) | 1050.41 | 722.92 | 2.88 | Rich features did not help baseline |
-
-| LightGBM (FE v2 tuned) | 2032.34 | 1244.25 | 4.66 | Overfit / unstable tuning region |
-
+| LightGBM (FE v2 tuned) | 2032.34 | 1244.25 | 4.66 | Overfit / unstable tuning |
 | LightGBM (FE v2 tuned v2) | 788.63 | 553.21 | 2.16 | Improved but still behind FE v1 tuned |
-
 | XGBoost (baseline) | 1274.80 | 762.25 | 2.92 | Underperforms tuned LGBM |
-
 | XGBoost (Optuna tuned) | 1220.09 | 779.31 | 3.09 | Small gains |
-
 | XGBoost (Optuna tuned v2) | 1030.70 | 650.69 | 2.62 | Better but still behind tuned LGBM |
 
 
@@ -331,6 +318,7 @@ To ensure TFT improvement is real and not leakage/mismatched windows, the notebo
 
 
 ---
+
 
 
 
