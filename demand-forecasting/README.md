@@ -70,7 +70,7 @@ Purpose: strong tabular learners using **lag/rolling/calendar features**, traine
 
 ### C) Deep learning main model (panel forecasting)
 
-\- ✅ **Temporal Fusion Transformer (TFT)** using `pytorch-forecasting` + PyTorch Lightning
+\- **Temporal Fusion Transformer (TFT)** using `pytorch-forecasting` + PyTorch Lightning
 
 
 
@@ -220,7 +220,7 @@ Below is the final holdout performance (90-day holdout) from the notebook:
 
 | LightGBM (baseline, FE v1) | 991.28 | 689.76 | 2.68 | Strong jump vs classical models |
 
-| ✅ LightGBM (Optuna tuned, FE v1) | **748.37** | **538.31** | **2.08** | Best among tabular models |
+| LightGBM (Optuna tuned, FE v1) | **748.37** | **538.31** | **2.08** | Best among tabular models |
 
 | LightGBM (FE v2 baseline) | 1050.41 | 722.92 | 2.88 | Rich features did not help baseline |
 
@@ -318,7 +318,7 @@ To ensure TFT improvement is real and not leakage/mismatched windows, the notebo
 
 | Naive (repeat first value across horizon) | 15.40 | 11.61 |
 
-| ✅ TFT | **7.55** | **5.81** |
+| TFT | **7.55** | **5.81** |
 
 
 
@@ -331,5 +331,6 @@ To ensure TFT improvement is real and not leakage/mismatched windows, the notebo
 
 
 ---
+
 
 
