@@ -295,21 +295,17 @@ For the real business setting (store × item), we need a model that can learn pa
 
 ### TFT sanity check vs naive baseline (panel forecasting)
 
-To ensure TFT improvement is real and not leakage/mismatched windows, the notebook includes a naive baseline:
-
-
+To ensure TFT improvement is real (not leakage or mismatched windows),  
+the notebook includes a simple naive baseline for comparison.
 
 | Model | RMSE | MAE |
-
-|---|---:|---:|
-
+|------|------|-----|
 | Naive (repeat first value across horizon) | 15.40 | 11.61 |
+| **TFT** | **7.55** | **5.81** |
 
-| TFT | **7.55** | **5.81** |
+**Interpretation:**  
+TFT delivers a clear and substantial improvement over a naive baseline in the **panel forecasting** setting.
 
-
-
-**Interpretation:** TFT delivers a clear improvement over a naive baseline in the **panel setting**.
 
 
 
@@ -318,6 +314,7 @@ To ensure TFT improvement is real and not leakage/mismatched windows, the notebo
 
 
 ---
+
 
 
 
