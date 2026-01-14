@@ -1,10 +1,10 @@
-\# 7-Eleven Demand Forecasting (Multi-store / Multi-item) — ML + \*\*Temporal Fusion Transformer (TFT)\*\*
+# 7-Eleven Demand Forecasting (Multi-store / Multi-item) — ML + **Temporal Fusion Transformer (TFT)**
 
 
 
-This project builds and compares multiple forecasting approaches for \*\*daily product demand\*\* and culminates in a \*\*deep learning TFT model\*\* as the main solution.  
+This project builds and compares multiple forecasting approaches for **daily product demand** and culminates in a **deep learning TFT model** as the main solution.  
 
-The focus is \*\*modeling + optimization + comparison\*\* (not descriptive analysis).
+The focus is **modeling + optimization + comparison** (not descriptive analysis).
 
 
 
@@ -12,23 +12,23 @@ The focus is \*\*modeling + optimization + comparison\*\* (not descriptive analy
 
 
 
-\## 1) Problem \& Goal
+## 1) Problem \& Goal
 
 
 
-Given historical sales for store–item combinations, the goal is to predict future demand over a \*\*90-day horizon\*\*.
+Given historical sales for store–item combinations, the goal is to predict future demand over a **90-day horizon**.
 
 
 
 Key challenges (what drives the modeling choices):
 
-\- \*\*Multiple related time series\*\* (store × item) with different scales and patterns
+\- **Multiple related time series** (store × item) with different scales and patterns
 
-\- Strong \*\*seasonality / calendar effects\*\*
+\- Strong **seasonality / calendar effects**
 
-\- Need for \*\*robust generalization\*\* (avoid leakage, validate with time-aware splits)
+\- Need for **robust generalization** (avoid leakage, validate with time-aware splits)
 
-\- Preference for models that can learn \*\*nonlinear effects + interactions\*\* across series
+\- Preference for models that can learn **nonlinear effects + interactions** across series
 
 
 
@@ -36,7 +36,7 @@ Key challenges (what drives the modeling choices):
 
 
 
-\## 2) What I built (high level)
+## 2) What I built (high level)
 
 
 
@@ -44,37 +44,37 @@ I implemented and evaluated forecasting models in three tiers:
 
 
 
-\### A) Classical time-series baselines (univariate, aggregated series)
+### A) Classical time-series baselines (univariate, aggregated series)
 
-\- \*\*Prophet\*\*
+\- **Prophet**
 
-\- \*\*SARIMAX / ARIMA-style\*\*
-
-
-
-Purpose: provide a \*\*lower-bound\*\* baseline and sanity check.
+\- **SARIMAX / ARIMA-style**
 
 
 
-\### B) Feature-based Machine Learning models (tabular formulation)
-
-\- \*\*LightGBM\*\* (baseline + Optuna tuning)
-
-\- \*\*XGBoost\*\* (baseline + Optuna tuning)
+Purpose: provide a **lower-bound** baseline and sanity check.
 
 
 
-Purpose: strong tabular learners using \*\*lag/rolling/calendar features\*\*, trained with \*\*time-series cross-validation\*\* and \*\*early stopping\*\*.
+### B) Feature-based Machine Learning models (tabular formulation)
+
+\- **LightGBM** (baseline + Optuna tuning)
+
+\- **XGBoost** (baseline + Optuna tuning)
 
 
 
-\### C) Deep learning main model (panel forecasting)
-
-\- ✅ \*\*Temporal Fusion Transformer (TFT)\*\* using `pytorch-forecasting` + PyTorch Lightning
+Purpose: strong tabular learners using **lag/rolling/calendar features**, trained with **time-series cross-validation** and **early stopping**.
 
 
 
-Purpose: a production-grade approach that handles \*\*many series jointly\*\*, learns \*\*long/short-term patterns\*\*, and outputs \*\*probabilistic forecasts\*\* (quantiles).
+### C) Deep learning main model (panel forecasting)
+
+\- ✅ **Temporal Fusion Transformer (TFT)** using `pytorch-forecasting` + PyTorch Lightning
+
+
+
+Purpose: a production-grade approach that handles **many series jointly**, learns **long/short-term patterns**, and outputs **probabilistic forecasts** (quantiles).
 
 
 
@@ -82,25 +82,25 @@ Purpose: a production-grade approach that handles \*\*many series jointly\*\*, l
 
 
 
-\## 3) Evaluation design (how I measured models)
+## 3) Evaluation design (how I measured models)
 
 
 
-\### Holdout strategy (time-aware)
+### Holdout strategy (time-aware)
 
-\- Final \*\*90 days\*\* are held out for evaluation (no leakage)
+\- Final **90 days** are held out for evaluation (no leakage)
 
 \- Models are trained on earlier data and evaluated on the final window
 
 
 
-\### Metrics
+### Metrics
 
-\- \*\*RMSE\*\*
+\- **RMSE**
 
-\- \*\*MAE\*\*
+\- **MAE**
 
-\- \*\*sMAPE\*\* (robust percentage error for demand)
+\- **sMAPE** (robust percentage error for demand)
 
 
 
@@ -112,7 +112,7 @@ Purpose: a production-grade approach that handles \*\*many series jointly\*\*, l
 
 
 
-\## 4) Feature Engineering for ML models (LightGBM / XGBoost)
+## 4) Feature Engineering for ML models (LightGBM / XGBoost)
 
 
 
@@ -120,29 +120,29 @@ To convert forecasting into supervised learning, I created lag/rolling features 
 
 
 
-\### Feature set v1 (compact, strong baseline)
+### Feature set v1 (compact, strong baseline)
 
-\- Calendar: `dayofweek`, `month`, `is\_weekend`
+\- Calendar: `dayofweek`, `month`, `is_weekend`
 
-\- Lags: `lag\_1`, `lag\_7`, `lag\_30`
+\- Lags: `lag_1`, `lag_7`, `lag_30`
 
-\- Rolling means (shifted to avoid leakage): `roll\_7`, `roll\_30`
+\- Rolling means (shifted to avoid leakage): `roll_7`, `roll_30`
 
 
 
-\### Feature set v2 (richer / more aggressive)
+### Feature set v2 (richer / more aggressive)
 
 \- Trend: `t` (days since start)
 
-\- Calendar: `weekofyear`, `quarter`, `month\_end`, etc.
+\- Calendar: `weekofyear`, `quarter`, `month_end`, etc.
 
-\- More rolling signals: `roll\_mean\_7/14/28/30`, `roll\_std\_7/28`, `ewm\_14`
+\- More rolling signals: `roll_mean_7/14/28/30`, `roll_std_7/28`, `ewm_14`
 
 \- Multiple lags
 
 
 
-\*\*Important note:\*\* richer features don’t always improve performance—v2 can introduce:
+**Important note:** richer features don’t always improve performance—v2 can introduce:
 
 \- more noise / higher variance (overfitting risk)
 
@@ -156,41 +156,41 @@ To convert forecasting into supervised learning, I created lag/rolling features 
 
 
 
-\## 5) Hyperparameter optimization (Optuna)
+## 5) Hyperparameter optimization (Optuna)
 
 
 
-\### LightGBM tuning
+### LightGBM tuning
 
-\- Optimized with \*\*Optuna\*\* using \*\*time-series cross-validation\*\* (TimeSeriesSplit)
+\- Optimized with **Optuna** using **time-series cross-validation** (TimeSeriesSplit)
 
-\- Early stopping with high `n\_estimators` and pruning
+\- Early stopping with high `n_estimators` and pruning
 
 \- Tuned parameters include:
 
-&nbsp; - `learning\_rate`, `num\_leaves`, `max\_depth`
+&nbsp; - `learning_rate`, `num_leaves`, `max_depth`
 
-&nbsp; - `min\_data\_in\_leaf`, `feature\_fraction`, `bagging\_fraction`, `bagging\_freq`
+&nbsp; - `min_data_in_leaf`, `feature_fraction`, `bagging_fraction`, `bagging_freq`
 
-&nbsp; - `lambda\_l1`, `lambda\_l2`
+&nbsp; - `lambda_l1`, `lambda_l2`
 
 
 
-\### XGBoost tuning
+### XGBoost tuning
 
-\- Optimized with \*\*Optuna\*\* using time-series CV
+\- Optimized with **Optuna** using time-series CV
 
 \- Early stopping based on validation RMSE
 
 \- Tuned parameters include:
 
-&nbsp; - tree complexity: `max\_depth`, `min\_child\_weight`
+&nbsp; - tree complexity: `max_depth`, `min_child_weight`
 
-&nbsp; - learning rate: `learning\_rate`
+&nbsp; - learning rate: `learning_rate`
 
-&nbsp; - regularization: `reg\_alpha`, `reg\_lambda`
+&nbsp; - regularization: `reg_alpha`, `reg_lambda`
 
-&nbsp; - subsampling: `subsample`, `colsample\_bytree`
+&nbsp; - subsampling: `subsample`, `colsample_bytree`
 
 &nbsp; - split threshold: `gamma`
 
@@ -200,11 +200,11 @@ To convert forecasting into supervised learning, I created lag/rolling features 
 
 
 
-\## 6) Model comparison (results summary)
+## 6) Model comparison (results summary)
 
 
 
-\### Aggregated series (Prophet / SARIMAX / LightGBM / XGBoost)
+### Aggregated series (Prophet / SARIMAX / LightGBM / XGBoost)
 
 Below is the final holdout performance (90-day holdout) from the notebook:
 
@@ -220,7 +220,7 @@ Below is the final holdout performance (90-day holdout) from the notebook:
 
 | LightGBM (baseline, FE v1) | 991.28 | 689.76 | 2.68 | Strong jump vs classical models |
 
-| ✅ LightGBM (Optuna tuned, FE v1) | \*\*748.37\*\* | \*\*538.31\*\* | \*\*2.08\*\* | Best among tabular models |
+| ✅ LightGBM (Optuna tuned, FE v1) | **748.37** | **538.31** | **2.08** | Best among tabular models |
 
 | LightGBM (FE v2 baseline) | 1050.41 | 722.92 | 2.88 | Rich features did not help baseline |
 
@@ -236,11 +236,11 @@ Below is the final holdout performance (90-day holdout) from the notebook:
 
 
 
-\*\*Takeaway:\*\*  
+**Takeaway:**  
 
 \- Classical models (Prophet/SARIMAX) struggled on this dataset.  
 
-\- Feature-based ML is much stronger; \*\*LightGBM tuned (FE v1)\*\* is the best tabular model.
+\- Feature-based ML is much stronger; **LightGBM tuned (FE v1)** is the best tabular model.
 
 
 
@@ -248,45 +248,45 @@ Below is the final holdout performance (90-day holdout) from the notebook:
 
 
 
-\## 7) Why TFT is the main model in this project
+## 7) Why TFT is the main model in this project
 
 
 
-Tabular GBMs are excellent, but they rely on \*\*handcrafted features\*\* and typically operate on one aggregated series or a limited formulation.  
+Tabular GBMs are excellent, but they rely on **handcrafted features** and typically operate on one aggregated series or a limited formulation.  
 
-For the real business setting (store × item), we need a model that can learn patterns across \*\*many related series\*\* and produce stable multi-horizon forecasts.
+For the real business setting (store × item), we need a model that can learn patterns across **many related series** and produce stable multi-horizon forecasts.
 
 
 
-\### TFT advantages (why it stands out)
+### TFT advantages (why it stands out)
 
-\- \*\*Global model\*\* across many store–item series (learns shared structure)
+\- **Global model** across many store–item series (learns shared structure)
 
 \- Combines:
 
 &nbsp; - RNN-style temporal processing
 
-&nbsp; - \*\*attention\*\* for long-range dependencies
+&nbsp; - **attention** for long-range dependencies
 
-&nbsp; - \*\*gating + variable selection\*\* for robustness
+&nbsp; - **gating + variable selection** for robustness
 
-\- Supports \*\*probabilistic forecasting\*\* via \*\*QuantileLoss\*\*
+\- Supports **probabilistic forecasting** via **QuantileLoss**
 
-\- Can incorporate \*\*static categoricals\*\* (store, item) + known covariates (calendar)
+\- Can incorporate **static categoricals** (store, item) + known covariates (calendar)
 
 
 
-\### TFT setup used in this notebook
+### TFT setup used in this notebook
 
-\- Forecast horizon: \*\*90 days\*\*
+\- Forecast horizon: **90 days**
 
-\- Encoder length: \*\*365 days\*\*
+\- Encoder length: **365 days**
 
 \- Inputs:
 
 &nbsp; - static categoricals: `store`, `item`
 
-&nbsp; - known reals: `time\_idx`, `dayofweek`, `month`, `is\_weekend`
+&nbsp; - known reals: `time_idx`, `dayofweek`, `month`, `is_weekend`
 
 &nbsp; - unknown reals: `sales`
 
@@ -296,7 +296,7 @@ For the real business setting (store × item), we need a model that can learn pa
 
 \- Training:
 
-&nbsp; - Early stopping on `val\_loss`
+&nbsp; - Early stopping on `val_loss`
 
 &nbsp; - Checkpoint best epoch
 
@@ -306,7 +306,7 @@ For the real business setting (store × item), we need a model that can learn pa
 
 
 
-\### TFT sanity check vs naive baseline (panel forecasting)
+### TFT sanity check vs naive baseline (panel forecasting)
 
 To ensure TFT improvement is real and not leakage/mismatched windows, the notebook includes a naive baseline:
 
@@ -318,11 +318,11 @@ To ensure TFT improvement is real and not leakage/mismatched windows, the notebo
 
 | Naive (repeat first value across horizon) | 15.40 | 11.61 |
 
-| ✅ TFT | \*\*7.55\*\* | \*\*5.81\*\* |
+| ✅ TFT | **7.55** | **5.81** |
 
 
 
-\*\*Interpretation:\*\* TFT delivers a clear improvement over a naive baseline in the \*\*panel setting\*\*.
+**Interpretation:** TFT delivers a clear improvement over a naive baseline in the **panel setting**.
 
 
 
@@ -331,4 +331,5 @@ To ensure TFT improvement is real and not leakage/mismatched windows, the notebo
 
 
 ---
+
 
